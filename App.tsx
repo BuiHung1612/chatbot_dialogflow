@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useEffect} from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   PermissionsAndroid,
   SafeAreaView,
@@ -9,7 +9,7 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
-import {GiftedChat, IMessage} from 'react-native-gifted-chat';
+import { GiftedChat, IMessage } from 'react-native-gifted-chat';
 import Voice, {
   SpeechEndEvent,
   SpeechErrorEvent,
@@ -35,11 +35,11 @@ const App = () => {
 
         if (
           grants['android.permission.WRITE_EXTERNAL_STORAGE'] ===
-            PermissionsAndroid.RESULTS.GRANTED &&
+          PermissionsAndroid.RESULTS.GRANTED &&
           grants['android.permission.READ_EXTERNAL_STORAGE'] ===
-            PermissionsAndroid.RESULTS.GRANTED &&
+          PermissionsAndroid.RESULTS.GRANTED &&
           grants['android.permission.RECORD_AUDIO'] ===
-            PermissionsAndroid.RESULTS.GRANTED
+          PermissionsAndroid.RESULTS.GRANTED
         ) {
           console.log('Permissions granted');
         } else {
@@ -81,27 +81,44 @@ const App = () => {
     console.log('onSpeechResults', e);
     setIsStartedMicro(false);
     if (e != null && e.value != null) {
-      const data: IMessage[] = [
-        {
-          _id: Date.now(),
-          text: '',
-          createdAt: Date.now(),
-          user: {
-            _id: 1,
-            name: 'Me',
+      let data: IMessage[] = []
+      if (e.value.length > 2) {
+        data = [
+          {
+            _id: Date.now(),
+            text: '',
+            createdAt: Date.now(),
+            user: {
+              _id: 1,
+              name: 'Me',
+            },
+            quickReplies: {
+              type: 'radio', // or 'checkbox',
+              keepIt: true,
+              values: e.value.map(v => ({
+                title: v,
+                value: v,
+              })),
+            },
           },
-          quickReplies: {
-            type: 'radio', // or 'checkbox',
-            keepIt: true,
-            values: e.value.map(v => ({
-              title: v,
-              value: v,
-            })),
+        ];
+      } else {
+        data = [
+          {
+            _id: Date.now(),
+            text: e.value[0],
+            createdAt: Date.now(),
+            user: {
+              _id: 1,
+              name: 'Me',
+            },
+
           },
-        },
-      ];
+        ];
+      }
+
       onSend(data);
-      // sendRequest(messages[0]);
+
     }
   };
   useEffect(() => {
@@ -232,11 +249,11 @@ const App = () => {
 
 export default App;
 const styles = StyleSheet.create({
-  layout: {flex: 1},
+  layout: { flex: 1 },
   overlay: {
     backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  recordTxt: {fontSize: 30, color: 'white', marginBottom: 40},
+  recordTxt: { fontSize: 30, color: 'white', marginBottom: 40 },
 });
