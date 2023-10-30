@@ -205,7 +205,7 @@ const App = () => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={styles.layout}>
       <Button title="Voice Record" onPress={onRecord} />
       <GiftedChat
         messages={messages}
@@ -221,7 +221,7 @@ const App = () => {
         }}
       />
       {isStartedMicro && (
-        <View style={[StyleSheet.absoluteFill, styles.container]}>
+        <View style={[StyleSheet.absoluteFill, styles.overlay]}>
           <Text style={styles.recordTxt}>Đang ghi âm...</Text>
           <Button title="Dừng ghi âm" onPress={onRecord} />
         </View>
@@ -232,7 +232,8 @@ const App = () => {
 
 export default App;
 const styles = StyleSheet.create({
-  container: {
+  layout: {flex: 1},
+  overlay: {
     backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
     alignItems: 'center',
