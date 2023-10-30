@@ -7,6 +7,7 @@ import {
   Text,
   View,
   StyleSheet,
+  Alert,
 } from 'react-native';
 import {GiftedChat, IMessage} from 'react-native-gifted-chat';
 import Voice, {
@@ -80,19 +81,27 @@ const App = () => {
     console.log('onSpeechResults', e);
     setIsStartedMicro(false);
     if (e != null && e.value != null) {
-      const messages = [
+      const data: IMessage[] = [
         {
           _id: Date.now(),
-          text: e.value[0],
+          text: '',
           createdAt: Date.now(),
           user: {
             _id: 1,
             name: 'Me',
           },
+          quickReplies: {
+            type: 'radio', // or 'checkbox',
+            keepIt: true,
+            values: e.value.map(v => ({
+              title: v,
+              value: v,
+            })),
+          },
         },
       ];
-      onSend(messages);
-      sendRequest(messages[0]);
+      onSend(data);
+      // sendRequest(messages[0]);
     }
   };
   useEffect(() => {
@@ -189,6 +198,8 @@ const App = () => {
       if (isAvailable) {
         await Voice.start('vi-VN');
         setIsStartedMicro(true);
+      } else {
+        Alert.alert('Thông báo', 'vocie not available');
       }
     }
   };
